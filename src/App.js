@@ -1,9 +1,16 @@
-import React, {useState, useRef, useEffect} from 'react'
-import Button from '@mui/material/Button';
-import { useForm } from "react-hook-form";
-import TextField from '@mui/material/TextField';
+import React, {useState, useEffect} from 'react'
+import Button from '@mui/material/Button'
+import { useForm } from "react-hook-form"
+import TextField from '@mui/material/TextField'
 import DataGrid from './Datagrid'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
+import SimpleContainer from './components/SimpleContainer'
+import Paper from '@mui/material/Paper'
+import AppBar from './components/AppBar'
+import {getJobs} from './data/api'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
 
 const LOCAL_STORAGE_KEY = 'jobLog.jobs'
 
@@ -14,8 +21,9 @@ function App() {
   const [jobs, setJobs] = useState([])
 
   useEffect(() => {
-    const storedJobs = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
-    if (storedJobs) setJobs(storedJobs)
+    getJobs().then(res => {
+      if (res.data) setJobs([...res.data])
+    })
   }, [])
 
   useEffect(() => {
@@ -34,18 +42,36 @@ function App() {
 
   return (
     <>
+      <AppBar />
+      <Container maxwidth="lg">
+        <Paper
+          elevation={0}
+          sx={{
+            mt: 3,
+            padding: 3
+          }}>
 
-        <DataGrid rows={jobs}/>
+          <Grid
+            container
+            justifyContent="space-between"
+            sx={{
+              mb: 1
+            }}
+          >
+            <Grid item>
+              <Typography variant="h6">List of existing jobs</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained">Add Job</Button>
+            </Grid>
+          </Grid>
+          
+          <DataGrid rows={jobs}/>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <TextField {...register("summary", { required: true })} variant="outlined" />
-          <TextField {...register("description", { required: true })} variant="outlined" />
-          <Button type="submit" variant="contained">Add Job</Button>
-        </form>
+        </Paper>
 
-        <div>
-          {jobs.length} jobs
-        </div>
+      </Container>
+        
     </>
   )
 }
