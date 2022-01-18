@@ -47,7 +47,7 @@ export default function AddJob() {
       })
       .catch((err) => {
         alert(
-          "There was a problem submitting your data. Ensure all feilds are populated."
+          "There was a problem submitting your data. Ensure all fields are populated."
         );
       });
   };
