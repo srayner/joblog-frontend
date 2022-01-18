@@ -11,14 +11,18 @@ The following installation instructions assume you have git and a recent version
 ## Installation
 
 Download this repo...
+
     git clone https://github.com/srayner/joblog-frontend.git
 
 Install the dependencies...
+
     npm install
 
 Create a local environemnt file...
+
     cd joblog-frontend
     echo REACT_APP_API_BASE_URL=http://localhost:8000/api/v1 > .env.local
 
 Start the application...
+
     npm start
