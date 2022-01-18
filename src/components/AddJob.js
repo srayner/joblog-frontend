@@ -14,6 +14,8 @@ import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { postJob } from "../data/api";
+import { getProperties } from "../data/api";
+import { useHistory } from "react-router-dom";
 
 export default function AddJob() {
   const {
@@ -23,16 +25,31 @@ export default function AddJob() {
     formState: { errors },
   } = useForm();
   const [jobs, setJobs] = useState([]);
+  const [properties, setProperties] = useState([]);
+  let history = useHistory();
+
+  useEffect(() => {
+    getProperties().then((res) => {
+      if (res.data) setProperties([...res.data]);
+    });
+  }, []);
 
   const onSubmit = (data) => {
-    const job = { ...data, status: "open", user: "Steve" };
+    const job = { ...data, status: "open", user: 1 };
     reset();
-    postJob(job).then((res) => {
-      const newJob = res.data;
-      setJobs((prevJobs) => {
-        return [...prevJobs, newJob];
+    postJob(job)
+      .then((res) => {
+        const newJob = res.data;
+        setJobs((prevJobs) => {
+          return [...prevJobs, newJob];
+        });
+        history.push("/");
+      })
+      .catch((err) => {
+        alert(
+          "There was a problem submitting your data. Ensure all feilds are populated."
+        );
       });
-    });
   };
 
   return (
@@ -64,6 +81,7 @@ export default function AddJob() {
                 fullWidth
                 multiline
                 rows={4}
+                inputProps={{ maxLength: 150 }}
                 {...register("summary")}
               ></TextField>
             </Grid>
@@ -73,6 +91,7 @@ export default function AddJob() {
                 fullWidth
                 multiline
                 rows={4}
+                inputProps={{ maxLength: 500 }}
                 {...register("description")}
               ></TextField>
             </Grid>
@@ -85,9 +104,9 @@ export default function AddJob() {
                   label="Property"
                   {...register("property")}
                 >
-                  <MenuItem value={10}>52 Park Place, Cartington</MenuItem>
-                  <MenuItem value={20}>27 Brynglas Road, Glespin</MenuItem>
-                  <MenuItem value={30}>23 Boat Lane, Reydon</MenuItem>
+                  {properties.map((item) => {
+                    return <MenuItem value={item.id}>{item.name}</MenuItem>;
+                  })}
                 </Select>
               </FormControl>
             </Grid>

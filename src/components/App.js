@@ -1,10 +1,10 @@
-import React from 'react'
-import AppBar from './AppBar'
-import Container from '@mui/material/Container'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import JobListContainer from './JobListContainer'
-import AddJob from './AddJob'
-import CssBaseline from '@mui/material/CssBaseline';
+import React from "react";
+import AppBar from "./AppBar";
+import Container from "@mui/material/Container";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import JobListContainer from "./JobListContainer";
+import AddJob from "./AddJob";
+import CssBaseline from "@mui/material/CssBaseline";
 
 export default function App() {
   return (
@@ -23,5 +23,5 @@ export default function App() {
         </Container>
       </CssBaseline>
     </Router>
-  )
+  );
 }
