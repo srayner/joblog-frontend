@@ -14,13 +14,16 @@ Download this repo...
 
     git clone https://github.com/srayner/joblog-frontend.git
 
+Move into the client directory...
+
+    cd joblog-frontend
+    
 Install the dependencies...
 
     npm install
 
 Create a local environemnt file...
 
-    cd joblog-frontend
     echo REACT_APP_API_BASE_URL=http://localhost:8000/api/v1 > .env.local
 
 Start the application...
