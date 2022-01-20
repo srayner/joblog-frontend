@@ -12,18 +12,61 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { postJob } from "../data/api";
 import { getProperties } from "../data/api";
 import { useHistory } from "react-router-dom";
+import { useFormik } from "formik";
 
 export default function AddJob() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const initialValues = {
+    summary: "",
+    description: "",
+    property: "",
+  };
+
+  const onSubmit = (values) => {
+    console.log("Form data: ", values);
+    const job = {
+      summary: values.summary,
+      description: values.description,
+      property: values.property,
+      status: "open",
+      user: 1,
+    };
+    postJob(job)
+      .then((res) => {
+        const newJob = res.data;
+        setJobs((prevJobs) => {
+          return [...prevJobs, newJob];
+        });
+        history.push("/");
+      })
+      .catch((err) => {
+        alert("There was a problem submitting your data.");
+      });
+  };
+
+  const validate = (values) => {
+    let errors = {};
+    if (!values.summary) {
+      errors.summary = "A brief summary is required";
+    }
+    if (!values.description) {
+      errors.description =
+        "Please provide a full description of the work required";
+    }
+    if (!values.property) {
+      errors.property = "Please select a property";
+    }
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+    validate,
+  });
+
   const [jobs, setJobs] = useState([]);
   const [properties, setProperties] = useState([]);
   let history = useHistory();
@@ -34,24 +77,7 @@ export default function AddJob() {
     });
   }, []);
 
-  const onSubmit = (data) => {
-    const job = { ...data, status: "open", user: 1 };
-    reset();
-    postJob(job)
-      .then((res) => {
-        const newJob = res.data;
-        setJobs((prevJobs) => {
-          return [...prevJobs, newJob];
-        });
-        history.push("/");
-      })
-      .catch((err) => {
-        alert(
-          "There was a problem submitting your data. Ensure all fields are populated."
-        );
-      });
-  };
-
+  console.log(formik.errors);
   return (
     <Paper
       elevation={0}
@@ -72,61 +98,86 @@ export default function AddJob() {
         </Grid>
       </Grid>
 
-      <Card>
-        <CardContent>
-          <Grid container spacing={1}>
-            <Grid item xs={12} mb={1}>
-              <TextField
-                label="Summary"
-                fullWidth
-                multiline
-                rows={4}
-                inputProps={{ maxLength: 150 }}
-                {...register("summary")}
-              ></TextField>
+      <form onSubmit={formik.handleSubmit}>
+        <Card>
+          <CardContent>
+            <Grid container spacing={1}>
+              <Grid item xs={12} mb={1}>
+                <TextField
+                  id="summary-input"
+                  name="summary"
+                  label="Summary"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  inputProps={{ maxLength: 150 }}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.summary}
+                  error={formik.errors.summary && formik.touched.summary}
+                  helperText={formik.errors.summary}
+                ></TextField>
+              </Grid>
+              <Grid item item xs={12} mb={1}>
+                <TextField
+                  id="description-input"
+                  name="description"
+                  label="Description"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  inputProps={{ maxLength: 500 }}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.description}
+                  error={
+                    formik.errors.description && formik.touched.description
+                  }
+                  helperText={formik.errors.description}
+                ></TextField>
+              </Grid>
+              <Grid item item xs={12} mb={1}>
+                <FormControl fullWidth>
+                  <InputLabel id="property-select-label">Property</InputLabel>
+                  <Select
+                    id="property-select"
+                    name="property"
+                    labelId="property-select-label"
+                    label="Property"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.property}
+                    error={formik.errors.property && formik.touched.property}
+                    helperText={formik.errors.property}
+                  >
+                    {properties.map((item) => {
+                      return (
+                        <MenuItem value={item.id} key={item.id}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                mb={1}
+                container
+                justifyContent={"space-between"}
+              >
+                <Button type="submit" variant="contained">
+                  Add
+                </Button>
+                <Link component={RouterLink} to="/">
+                  <Button>Cancel</Button>
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item item xs={12} mb={1}>
-              <TextField
-                label="Description"
-                fullWidth
-                multiline
-                rows={4}
-                inputProps={{ maxLength: 500 }}
-                {...register("description")}
-              ></TextField>
-            </Grid>
-            <Grid item item xs={12} mb={1}>
-              <FormControl fullWidth>
-                <InputLabel id="property-select-label">Property</InputLabel>
-                <Select
-                  labelId="property-select-label"
-                  id="property-select"
-                  label="Property"
-                  {...register("property")}
-                >
-                  {properties.map((item) => {
-                    return <MenuItem value={item.id}>{item.name}</MenuItem>;
-                  })}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              mb={1}
-              container
-              justifyContent={"space-between"}
-            >
-              <Button variant="contained" onClick={handleSubmit(onSubmit)}>
-                Add
-              </Button>
-              <Link component={RouterLink} to="/">
-                <Button>Cancel</Button>
-              </Link>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </form>
     </Paper>
   );
 }
