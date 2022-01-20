@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
+import FormHelperText from "@mui/material/FormHelperText";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -137,7 +138,10 @@ export default function AddJob() {
                 ></TextField>
               </Grid>
               <Grid item item xs={12} mb={1}>
-                <FormControl fullWidth>
+                <FormControl
+                  fullWidth
+                  error={formik.errors.property && formik.touched.property}
+                >
                   <InputLabel id="property-select-label">Property</InputLabel>
                   <Select
                     id="property-select"
@@ -158,6 +162,9 @@ export default function AddJob() {
                       );
                     })}
                   </Select>
+                  {formik.errors.property && formik.touched.property && (
+                    <FormHelperText>Please select a property</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid
