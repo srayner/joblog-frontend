@@ -13,8 +13,8 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
-import { postJob } from "../data/api";
-import { getProperties } from "../data/api";
+import { postJob } from "../../data/api";
+import { getProperties } from "../../data/api";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 
@@ -26,7 +26,6 @@ export default function AddJob() {
   };
 
   const onSubmit = (values) => {
-    console.log("Form data: ", values);
     const job = {
       summary: values.summary,
       description: values.description,
@@ -68,7 +67,7 @@ export default function AddJob() {
     validate,
   });
 
-  const [jobs, setJobs] = useState([]);
+  const [, setJobs] = useState([]);
   const [properties, setProperties] = useState([]);
   let history = useHistory();
 
@@ -78,7 +77,6 @@ export default function AddJob() {
     });
   }, []);
 
-  console.log(formik.errors);
   return (
     <Paper
       elevation={0}
@@ -119,7 +117,7 @@ export default function AddJob() {
                   helperText={formik.errors.summary}
                 ></TextField>
               </Grid>
-              <Grid item item xs={12} mb={1}>
+              <Grid item xs={12} mb={1}>
                 <TextField
                   id="description-input"
                   name="description"
@@ -137,7 +135,7 @@ export default function AddJob() {
                   helperText={formik.errors.description}
                 ></TextField>
               </Grid>
-              <Grid item item xs={12} mb={1}>
+              <Grid item xs={12} mb={1}>
                 <FormControl
                   fullWidth
                   error={formik.errors.property && formik.touched.property}
@@ -152,7 +150,6 @@ export default function AddJob() {
                     onBlur={formik.handleBlur}
                     value={formik.values.property}
                     error={formik.errors.property && formik.touched.property}
-                    helperText={formik.errors.property}
                   >
                     {properties.map((item) => {
                       return (
@@ -163,7 +160,7 @@ export default function AddJob() {
                     })}
                   </Select>
                   {formik.errors.property && formik.touched.property && (
-                    <FormHelperText>Please select a property</FormHelperText>
+                    <FormHelperText>{formik.errors.property}</FormHelperText>
                   )}
                 </FormControl>
               </Grid>

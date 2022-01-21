@@ -1,27 +1,28 @@
 import React from "react";
-import AppBar from "./AppBar";
+import AppBar from "./app-bar";
 import Container from "@mui/material/Container";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import JobListContainer from "./JobListContainer";
-import AddJob from "./AddJob";
+import { Route, Switch, Redirect } from "react-router-dom";
+import ListJobs from "../jobs/list-jobs";
+import AddJob from "../jobs/add-job";
 import CssBaseline from "@mui/material/CssBaseline";
 
 export default function App() {
   return (
-    <Router>
+    <>
       <CssBaseline>
         <AppBar />
         <Container maxwidth="lg">
           <Switch>
             <Route exact path="/">
-              <JobListContainer />
+              <ListJobs />
             </Route>
             <Route path="/add-job">
               <AddJob />
             </Route>
+            <Redirect to="/" />
           </Switch>
         </Container>
       </CssBaseline>
-    </Router>
+    </>
   );
 }
