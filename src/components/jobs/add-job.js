@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -78,29 +78,14 @@ export default function AddJob() {
   }, []);
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        mt: 3,
-        padding: 3,
-      }}
-    >
-      <Grid
-        container
-        justifyContent="space-between"
-        sx={{
-          mb: 1,
-        }}
-      >
-        <Grid item>
-          <Typography variant="h6">Add new job</Typography>
-        </Grid>
-      </Grid>
-
+    <Box sx={{ mt: 6 }}>
       <form onSubmit={formik.handleSubmit}>
         <Card>
           <CardContent>
             <Grid container spacing={1}>
+              <Grid item>
+                <Typography variant="h6">Add new job</Typography>
+              </Grid>
               <Grid item xs={12} mb={1}>
                 <TextField
                   id="summary-input"
@@ -182,6 +167,6 @@ export default function AddJob() {
           </CardContent>
         </Card>
       </form>
-    </Paper>
+    </Box>
   );
 }
