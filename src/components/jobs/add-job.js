@@ -5,15 +5,10 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
-import FormHelperText from "@mui/material/FormHelperText";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
-import { postJob } from "../../data/api";
+import { postJob, postProperty } from "../../data/api";
 import { getProperties } from "../../data/api";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
@@ -26,24 +21,27 @@ export default function AddJob() {
   };
 
   const onSubmit = (values) => {
-    const job = {
-      summary: values.summary,
-      description: values.description,
-      property: values.property,
-      status: "open",
-      user: 1,
-    };
-    postJob(job)
-      .then((res) => {
-        const newJob = res.data;
-        setJobs((prevJobs) => {
-          return [...prevJobs, newJob];
+    const property = { name: values.property };
+    postProperty(property).then((res) => {
+      const job = {
+        summary: values.summary,
+        description: values.description,
+        property: res.data.id,
+        status: "open",
+        user: 1,
+      };
+      postJob(job)
+        .then((res) => {
+          const newJob = res.data;
+          setJobs((prevJobs) => {
+            return [...prevJobs, newJob];
+          });
+          history.push("/");
+        })
+        .catch((err) => {
+          alert("There was a problem submitting your data.");
         });
-        history.push("/");
-      })
-      .catch((err) => {
-        alert("There was a problem submitting your data.");
-      });
+    });
   };
 
   const validate = (values) => {
@@ -98,8 +96,12 @@ export default function AddJob() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.summary}
-                  error={formik.errors.summary && formik.touched.summary}
-                  helperText={formik.errors.summary}
+                  error={
+                    formik.touched.summary && Boolean(formik.errors.summary)
+                  }
+                  helperText={
+                    formik.touched.summary ? formik.errors.summary : ""
+                  }
                 ></TextField>
               </Grid>
               <Grid item xs={12} mb={1}>
@@ -115,39 +117,31 @@ export default function AddJob() {
                   onBlur={formik.handleBlur}
                   value={formik.values.description}
                   error={
-                    formik.errors.description && formik.touched.description
+                    formik.touched.description &&
+                    Boolean(formik.errors.description)
                   }
-                  helperText={formik.errors.description}
+                  helperText={
+                    formik.touched.description ? formik.errors.description : ""
+                  }
                 ></TextField>
               </Grid>
               <Grid item xs={12} mb={1}>
-                <FormControl
+                <TextField
+                  id="property-input"
+                  name="property"
+                  label="Property"
                   fullWidth
-                  error={formik.errors.property && formik.touched.property}
-                >
-                  <InputLabel id="property-select-label">Property</InputLabel>
-                  <Select
-                    id="property-select"
-                    name="property"
-                    labelId="property-select-label"
-                    label="Property"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.property}
-                    error={formik.errors.property && formik.touched.property}
-                  >
-                    {properties.map((item) => {
-                      return (
-                        <MenuItem value={item.id} key={item.id}>
-                          {item.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                  {formik.errors.property && formik.touched.property && (
-                    <FormHelperText>{formik.errors.property}</FormHelperText>
-                  )}
-                </FormControl>
+                  inputProps={{ maxLength: 255 }}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.property}
+                  error={
+                    formik.touched.property && Boolean(formik.errors.property)
+                  }
+                  helperText={
+                    formik.touched.property ? formik.errors.property : ""
+                  }
+                ></TextField>
               </Grid>
               <Grid
                 item

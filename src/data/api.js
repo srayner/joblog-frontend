@@ -6,10 +6,14 @@ export function getJobs() {
   return axios.get(baseUri + "/jobs");
 }
 
-export function postJob($job) {
-  return axios.post(baseUri + "/jobs", $job);
+export function postJob(job) {
+  return axios.post(baseUri + "/jobs", job);
 }
 
 export function getProperties() {
   return axios.get(baseUri + "/properties");
+}
+
+export function postProperty(propery) {
+  return axios.post(baseUri + "/properties", propery);
 }
