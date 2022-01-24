@@ -34,4 +34,4 @@ Start the application...
 
 There are a few tests included and these can be ran with
 
-    nmp test
+    npm test
