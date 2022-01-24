@@ -29,3 +29,9 @@ Create a local environemnt file...
 Start the application...
 
     npm start
+
+## Testing
+
+There are a few tests included and these can be ran with
+
+    nmp test
