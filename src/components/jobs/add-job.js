@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import TextField from "@mui/material/TextField";
+import TextArea from "../form/text-area";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
@@ -84,65 +84,24 @@ export default function AddJob() {
               <Grid item>
                 <Typography variant="h6">Add new job</Typography>
               </Grid>
-              <Grid item xs={12} mb={1}>
-                <TextField
-                  id="summary-input"
-                  name="summary"
-                  label="Summary"
-                  fullWidth
-                  multiline
-                  rows={4}
-                  inputProps={{ maxLength: 150 }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.summary}
-                  error={
-                    formik.touched.summary && Boolean(formik.errors.summary)
-                  }
-                  helperText={
-                    formik.touched.summary ? formik.errors.summary : ""
-                  }
-                ></TextField>
-              </Grid>
-              <Grid item xs={12} mb={1}>
-                <TextField
-                  id="description-input"
-                  name="description"
-                  label="Description"
-                  fullWidth
-                  multiline
-                  rows={4}
-                  inputProps={{ maxLength: 500 }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.description}
-                  error={
-                    formik.touched.description &&
-                    Boolean(formik.errors.description)
-                  }
-                  helperText={
-                    formik.touched.description ? formik.errors.description : ""
-                  }
-                ></TextField>
-              </Grid>
-              <Grid item xs={12} mb={1}>
-                <TextField
-                  id="property-input"
-                  name="property"
-                  label="Property"
-                  fullWidth
-                  inputProps={{ maxLength: 255 }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.property}
-                  error={
-                    formik.touched.property && Boolean(formik.errors.property)
-                  }
-                  helperText={
-                    formik.touched.property ? formik.errors.property : ""
-                  }
-                ></TextField>
-              </Grid>
+              <TextArea
+                name="summary"
+                label="Summary"
+                chars={150}
+                formik={formik}
+              ></TextArea>
+              <TextArea
+                name="description"
+                label="Description"
+                chars={500}
+                formik={formik}
+              ></TextArea>
+              <TextArea
+                name="property"
+                label="Property"
+                chars={255}
+                formik={formik}
+              ></TextArea>
               <Grid
                 item
                 xs={12}
